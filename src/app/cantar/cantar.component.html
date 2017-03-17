@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="page-header">
+    <div class="row" *ngIf="!play">
+        <h2>Vamos cantar!!!</h2>
+    </div>
+  </div>
+
+  <div class="semMusicas" *ngIf="semMusicas">
+    Sem músicas no momento.
+  </div>
+
+  <div class="proximo" *ngIf="!play && !semMusicas && musica">
+    <div>
+      <strong>Próximo cantor:</strong>
+      
+      <span class="cantor">{{ musica?.user.displayName }}</span>
+      <img [src]="musica.user.photoURL" width="100" />
+      
+      
+    </div>
+    <hr />
+    <div>
+      <strong>Música:</strong> {{ musica?.snippet.title }}
+    </div>
+    <div>
+      Aguarde... {{ tempo }}
+    </div>
+  </div>
+
+  <youtube-player
+    *ngIf="play"
+    [videoId]="videoId"
+    [width]="854"
+    [height]="480"
+    (ready)="savePlayer($event)"
+    (change)="onStateChange($event)">
+  </youtube-player>
+</div>

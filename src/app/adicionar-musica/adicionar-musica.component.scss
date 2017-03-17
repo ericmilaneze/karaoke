@@ -1,0 +1,32 @@
+div.musica {
+    margin-top: 5px;
+    border: 1px dotted gray;
+    padding: 5px;
+
+    div.thumb {
+        float: left;
+        border: none;
+    }
+
+    div.details {
+        float: left;
+        margin-left: 10px;
+
+        span.title {
+            font-weight: bold;
+        }
+
+        div.buttons {
+            margin-top: 10px;
+        }
+    }
+}
+
+div.navegar {
+    margin-top: 10px;
+    padding: 10px;
+}
+
+span.label-resultado {
+    font-size: 1.2em;
+}

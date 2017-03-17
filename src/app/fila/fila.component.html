@@ -1,0 +1,27 @@
+<div class="container">
+  
+  <div class="page-header">
+    <div class="row">
+        <h2>Fila de Músicas</h2>
+    </div>
+  </div>
+
+  <div *ngIf="musicas?.length > 0">
+    <div *ngFor="let musica of musicas, let index = index" class="musica">
+      <div class="thumb hidden-xs">
+        <img [src]="musica.snippet.thumbnails.default.url" />
+      </div>
+      <div class="details">
+        <span class="title" [title]="musica.snippet.title">{{ index + 1 }}. {{ musica.snippet.title }}</span>
+        <div class="cantor">
+          <img [src]="musica.user.photoURL" width="50" />
+          Cantor: {{ musica.user.displayName }}
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div *ngIf="musicas?.length == 0">
+    Nenhuma música na fila.
+  </div>
+</div>

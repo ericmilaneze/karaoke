@@ -1,0 +1,62 @@
+<div class="container">
+  
+  <div class="page-header">
+    <div class="row">
+        <h2>Adicionar Músicas</h2>
+    </div>
+  </div>
+  
+  <div class="well bs-component">
+    <form #searchForm="ngForm">
+      <fieldset>
+        <legend>Buscar nova música</legend>
+        <div class="input-group">
+          <input type="text" class="form-control" name="busca" placeholder="Nome da música" 
+            (keyup.enter)="searchYoutube()" [(ngModel)]="busca" required>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" (click)="searchYoutube()"
+              [disabled]="!searchForm.form.valid"><span class="glyphicon glyphicon-search"></span> Buscar</button>
+          </span>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div *ngIf="musicas">
+    <span class="label-resultado">Resultados da busca:</span>
+
+    <div class="navegar pull-right">
+      <button class="btn btn-primary btn-sm" *ngIf="previousToken" (click)="previousPage()"><span class="glyphicon glyphicon-chevron-left"></span> Anterior</button>
+      <button class="btn btn-primary btn-sm" *ngIf="nextToken" (click)="nextPage()">Próximo <span class="glyphicon glyphicon-chevron-right"></span></button>
+    </div>
+    
+    <div class="clearfix"></div>
+
+    <div *ngFor="let musica of musicas" class="musica">
+      <div class="thumb hidden-xs">
+        <img [src]="musica.snippet.thumbnails.default.url" />
+      </div>
+      <div class="details">
+        <span class="title" [title]="musica.snippet.title">{{ musica.snippet.title }}</span>
+        
+        <div class="buttons">
+          <a [href]="youtubeVideoURLPrefix + musica.id.videoId" class="btn btn-primary btn-sm" target="_blank">
+            <span class="glyphicon glyphicon-eye-open"></span>
+            Visualizar
+          </a>
+          <a class="btn btn-primary btn-sm" (click)="adicionarMusica(musica)" *ngIf="!musica.added">
+            <span class="glyphicon glyphicon-plus-sign"></span>
+            Adicionar
+          </a>
+          <span class="label label-success" *ngIf="musica.added">Adicionada</span>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+
+    <div class="navegar pull-right">
+      <button class="btn btn-primary btn-sm" *ngIf="previousToken" (click)="previousPage()"><span class="glyphicon glyphicon-chevron-left"></span> Anterior</button>
+      <button class="btn btn-primary btn-sm" *ngIf="nextToken" (click)="nextPage()">Próximo <span class="glyphicon glyphicon-chevron-right"></span></button>
+    </div>
+  </div>
+</div>

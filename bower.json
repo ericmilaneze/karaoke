@@ -1,0 +1,14 @@
+{
+  "name": "karaoke",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/ericmilaneze/karaoke",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
