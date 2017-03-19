@@ -1,11 +1,11 @@
-import { GerenciadorFilaService } from './_services/gerenciador-fila.service';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { YoutubePlayerModule } from 'ng2-youtube-player';
+import { YoutubePlayerModule } from 'ng2-youtube-player/src/index';
 
+import { GerenciadorFilaService } from './_services/gerenciador-fila.service';
 import { AppComponent } from './app.component';
 import { AuthService } from './_services/auth.service';
 import { firebaseConfig } from './_settings/firebaseConfig';
