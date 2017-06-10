@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { YoutubePlayerModule } from 'ng2-youtube-player/src/index';
+import { YoutubePlayerModule } from './youtube-player/youtube-player.module';
 
 import { GerenciadorFilaService } from './_services/gerenciador-fila.service';
 import { AppComponent } from './app.component';
