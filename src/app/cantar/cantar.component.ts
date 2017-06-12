@@ -15,64 +15,86 @@ export class CantarComponent implements OnInit {
   }
 
   tempo = this.defaults.tempoInicial;
-  play = false;
+  tocandoMusica: boolean;
+  carregandoMusica: boolean;
+  mostrandoErro: boolean;
   player;
   state: number;
-  musica;
+  musica: any;
   videoId: string;
-  semMusicas = false;
+
+  get musicaTerminada() {
+    return this.state === 0;
+  }
+
+  get musicaComErro() {
+    return this.state === -1;
+  }
 
   constructor(
     private musicasDB: MusicasDBService,
     private gerenciadorFila: GerenciadorFilaService) { }
 
   ngOnInit() {
-    this.proximaMusica();
-  }
-
-  proximaMusica() {
     this.musicasDB.retornarMusicas()
       .subscribe(ms => {
-        this.musica = this.gerenciadorFila.retornarProxima(ms);
+        if (!this.carregandoMusica && !this.mostrandoErro && !this.tocandoMusica) {
+          this.musica = this.gerenciadorFila.retornarProxima(ms);
 
-        if (!this.musica) {
-          this.semMusicas = true;
-        }
-        else {
-          this.semMusicas = false;
-          this.videoId = this.musica.id.videoId;
+          if (this.musica) {
+            this.tempo = this.defaults.tempoInicial;
+            this.carregandoMusica = true;
+            this.videoId = this.musica.id.videoId;
 
-          let itvSub = Observable.interval(1000)
-            .subscribe(t => {
-              if (this.tempo > 0) {
-                this.tempo--;
-                this.play = false;
-              }
-              else {
-                itvSub.unsubscribe();
-                this.play = true;
-              }
-            });
+            this.tocandoMusica = false;
+
+            const itvSub = Observable.interval(1000)
+              .subscribe(t => {
+                if (this.tempo > 0) {
+                  this.tempo--;
+                }
+                else {
+                  itvSub.unsubscribe();
+                  this.tocandoMusica = true;
+                  this.carregandoMusica = false;
+                }
+              });
+          }
         }
       });
+  }
+
+  onStateChange(event) {
+    this.state = event.data;
+
+    if (this.musicaTerminada) {
+      this.musica.played = true;
+      this.musica.erro = false;
+      this.tocandoMusica = false;
+      this.musicasDB.atualizarMusicas(this.musica);
+    } else if (this.musicaComErro) {
+      this.mostrandoErro = true;
+      this.tocandoMusica = false;
+      this.tempo = this.defaults.tempoInicial;
+
+      const itvSub = Observable.interval(1000)
+        .subscribe(t => {
+          if (this.tempo > 0) {
+            this.tempo--;
+          }
+          else {
+            itvSub.unsubscribe();
+            this.musica.played = true;
+            this.musica.erro = true;
+            this.mostrandoErro = false;
+            this.musicasDB.atualizarMusicas(this.musica);
+          }
+        });
+    }
   }
 
   savePlayer(event) {
     this.player = event;
     this.player.playVideo();
   }
-
-  onStateChange(event) {
-    this.state = event.data;
-
-    if (this.state == 0) {
-      this.musica.played = true;
-
-      this.musicasDB.atualizarMusicas(this.musica);
-      this.play = false;
-      this.tempo = this.defaults.tempoInicial;
-      this.proximaMusica();
-    }
-  }
-
 }

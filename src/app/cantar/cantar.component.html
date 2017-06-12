@@ -5,18 +5,29 @@
     </div>
   </div>
 
-  <div class="semMusicas" *ngIf="semMusicas">
+  <div class="semMusicas" *ngIf="!musica">
     Sem músicas no momento.
   </div>
 
-  <div class="proximo" *ngIf="!play && !semMusicas && musica">
+  <div class="proximo" *ngIf="musica && carregandoMusica">
     <div>
       <strong>Próximo cantor:</strong>
       
       <span class="cantor">{{ musica?.user.displayName }}</span>
       <img [src]="musica.user.photoURL" width="100" />
-      
-      
+    </div>
+    <hr />
+    <div>
+      <strong>Música:</strong> {{ musica?.snippet.title }}
+    </div>
+    <div>
+      Aguarde... {{ tempo }}
+    </div>
+  </div>
+
+  <div class="erro" *ngIf="musica && mostrandoErro">
+    <div>
+      <strong>{{ musica?.user.displayName }}... Infelizmente, ocorreu um erro com sua música.</strong>
     </div>
     <hr />
     <div>
@@ -28,7 +39,7 @@
   </div>
 
   <youtube-player
-    *ngIf="play"
+    *ngIf="tocandoMusica"
     [videoId]="videoId"
     [width]="854"
     [height]="480"
