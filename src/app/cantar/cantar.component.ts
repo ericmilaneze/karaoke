@@ -1,7 +1,8 @@
-import { GerenciadorFilaService } from '../_services/gerenciador-fila.service';
 import { Observable } from 'rxjs/Rx';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+
 import { MusicasDBService } from '../_services/musicas-d-b.service';
-import { Component, OnInit } from '@angular/core';
+import { GerenciadorFilaService } from '../_services/gerenciador-fila.service';
 
 @Component({
   selector: 'app-cantar',
@@ -10,8 +11,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CantarComponent implements OnInit {
 
+  @ViewChild('divContainer')
+  divContainer: ElementRef;
+
   private defaults = {
-    tempoInicial: 10
+    tempoInicial: 2,
+    ratioLargura: 16,
+    ratioAltura: 9,
+    alturaMenuMargin: 75,
+    offsetAlturaVideo: 25
   }
 
   tempo = this.defaults.tempoInicial;
@@ -22,6 +30,8 @@ export class CantarComponent implements OnInit {
   state: number;
   musica: any;
   videoId: string;
+  larguraVideo: number;
+  alturaVideo: number;
 
   get musicaTerminada() {
     return this.state === 0;
@@ -36,6 +46,8 @@ export class CantarComponent implements OnInit {
     private gerenciadorFila: GerenciadorFilaService) { }
 
   ngOnInit() {
+    this.resize();
+
     this.musicasDB.retornarMusicas()
       .subscribe(ms => {
         if (!this.carregandoMusica && !this.mostrandoErro && !this.tocandoMusica) {
@@ -96,5 +108,20 @@ export class CantarComponent implements OnInit {
   savePlayer(event) {
     this.player = event;
     this.player.playVideo();
+  }
+
+  resize() {
+    const alturaTela = window.innerHeight;
+    const largura = +(window.getComputedStyle(this.divContainer.nativeElement, null).getPropertyValue('width').replace('px', ''));
+    const paddingLeft = +window.getComputedStyle(this.divContainer.nativeElement, null).getPropertyValue('padding-left').replace('px', '');
+    const paddingRight = +window.getComputedStyle(this.divContainer.nativeElement, null).getPropertyValue('padding-right').replace('px', '');
+
+    this.larguraVideo = (largura - paddingLeft - paddingRight);
+    this.alturaVideo = this.larguraVideo * this.defaults.ratioAltura / this.defaults.ratioLargura;
+    
+    if (this.alturaVideo > alturaTela - this.defaults.alturaMenuMargin) {
+      this.alturaVideo = alturaTela - this.defaults.alturaMenuMargin - this.defaults.offsetAlturaVideo;
+      this.larguraVideo = this.alturaVideo * this.defaults.ratioLargura / this.defaults.ratioAltura;
+    }
   }
 }

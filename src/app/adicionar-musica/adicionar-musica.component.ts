@@ -16,7 +16,6 @@ export class AdicionarMusicaComponent implements OnInit {
   musicas: any[];
   busca: string;
   buscaAtual: string;
-  youtubeVideoURLPrefix = 'https://www.youtube.com/watch?v=';
   nextToken: string;
   previousToken: string;
   user: UserInfo;

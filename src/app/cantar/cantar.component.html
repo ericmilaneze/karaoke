@@ -1,7 +1,7 @@
-<div class="container">
-  <div class="page-header">
+<div class="container" #divContainer (window:resize)="resize()">
+  <div class="page-header" *ngIf="!tocandoMusica">
     <div class="row" *ngIf="!play">
-        <h2>Vamos cantar!!!</h2>
+      <h2>Vamos cantar!!!</h2>
     </div>
   </div>
 
@@ -12,7 +12,7 @@
   <div class="proximo" *ngIf="musica && carregandoMusica">
     <div>
       <strong>Próximo cantor:</strong>
-      
+
       <span class="cantor">{{ musica?.user.displayName }}</span>
       <img [src]="musica.user.photoURL" width="100" />
     </div>
@@ -38,12 +38,25 @@
     </div>
   </div>
 
-  <youtube-player
-    *ngIf="tocandoMusica"
+  <!--<youtube-player 
+    *ngIf="tocandoMusica" 
     [videoId]="videoId"
-    [width]="854"
-    [height]="480"
-    (ready)="savePlayer($event)"
-    (change)="onStateChange($event)">
-  </youtube-player>
+     [width]="854" 
+     [height]="480" 
+     (ready)="savePlayer($event)"
+     (change)="onStateChange($event)">
+  </youtube-player>-->
+
+  <div class="musica">
+    <div>
+      <youtube-player 
+        *ngIf="tocandoMusica" 
+        [videoId]="videoId"
+        [width]="larguraVideo"
+        [height]="alturaVideo"
+        (ready)="savePlayer($event)"
+        (change)="onStateChange($event)">
+      </youtube-player>
+    </div>
+  </div>
 </div>
