@@ -13,9 +13,6 @@ export class YoutubeSearchService {
   constructor(private http: Http) { }
 
   search(q: string, pageToken?: string) {
-    console.log(q);
-    console.log(`${this.baseUrl}?part=${this.part}&q=${encodeURI(q + ' ' + this.suffix)}&maxResults=${this.maxResults}&pageToken=${pageToken ? pageToken : ''}&type=video&videoEmbeddable=true&key=${this.key}`);
-
     return this.http
       .get(`${this.baseUrl}?part=${this.part}&q=${encodeURI(q + ' ' + this.suffix)}&maxResults=${this.maxResults}&pageToken=${pageToken ? pageToken : ''}&type=video&videoEmbeddable=true&key=${this.key}`);
   }

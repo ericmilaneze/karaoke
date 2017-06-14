@@ -32,25 +32,40 @@
     
     <div class="clearfix"></div>
 
-    <div *ngFor="let musica of musicas" class="musica">
+    <div *ngFor="let musica of musicas, let i = index" class="musica">
       <div class="thumb hidden-xs">
         <img [src]="musica.snippet.thumbnails.default.url" />
+        <div class="youtube">
+          <youtube-player
+            *ngIf="testando[musica.id.videoId]"
+            [videoId]="musica.id.videoId"
+            [width]="1"
+            [height]="1"
+            (ready)="savePlayer($event, musica)"
+            (change)="onStateChange($event, musica)">
+          </youtube-player>
+        </div>
       </div>
+
       <div class="details">
         <span class="title" [title]="musica.snippet.title">{{ musica.snippet.title }}</span>
         
         <div class="buttons">
-          <a [href]="youtubeVideoURLPrefix + musica.id.videoId" class="btn btn-primary btn-sm" target="_blank">
+          <a [href]="defaults.youtubeURLPrefix + musica.id.videoId" class="btn btn-primary btn-sm" target="_blank">
             <span class="glyphicon glyphicon-eye-open"></span>
             Visualizar
           </a>
-          <a class="btn btn-primary btn-sm" (click)="adicionarMusica(musica)" *ngIf="!musica.added">
+          <a class="btn btn-primary btn-sm" (click)="adicionarMusica(musica)" *ngIf="!musica.added && !musica.erro && !testando[musica.id.videoId]">
             <span class="glyphicon glyphicon-plus-sign"></span>
             Adicionar
           </a>
+
+          <span class="label label-info" *ngIf="testando[musica.id.videoId]">Verificando...</span>
           <span class="label label-success" *ngIf="musica.added">Adicionada</span>
+          <span class="label label-danger" *ngIf="musica.erro">Música com problema...</span>
         </div>
       </div>
+      
       <div class="clearfix"></div>
     </div>
 

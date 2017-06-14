@@ -13,12 +13,18 @@ import { AngularFire } from "angularfire2";
 })
 export class AdicionarMusicaComponent implements OnInit {
 
+  private defaults = {
+    youtubeURLPrefix: 'https://www.youtube.com/watch?v='
+  }
+
   musicas: any[];
   busca: string;
   buscaAtual: string;
   nextToken: string;
   previousToken: string;
   user: UserInfo;
+  players: any[];
+  testando: any[];
 
   processResult = (res) => {
     let r = res.json();
@@ -33,6 +39,8 @@ export class AdicionarMusicaComponent implements OnInit {
     private musicasDB: MusicasDBService) { }
 
   ngOnInit() {
+    this.testando = [];
+    this.players = [];
     this.af.auth.subscribe(authState => this.user = authState.auth);
   }
 
@@ -54,7 +62,24 @@ export class AdicionarMusicaComponent implements OnInit {
   }
 
   adicionarMusica(musica) {
-    this.musicasDB.adicionarMusica(musica, this.user);
+    this.testando[musica.id.videoId] = true;
+    //this.musicasDB.adicionarMusica(musica, this.user);
+  }
+
+  savePlayer(event, musica) {
+    this.players[musica.id.videoId] = event;
+    this.players[musica.id.videoId].playVideo();
+  }
+
+  onStateChange(event, musica) {
+    console.log(event.data);
+    if (event.data !== 3 && event.data !== -1) {
+      this.testando[musica.id.videoId] = false;
+      this.musicasDB.adicionarMusica(musica, this.user);
+    } else if (event.data === -1) {
+      this.testando[musica.id.videoId] = false;
+      musica.erro = true;
+    }
   }
 
 }
