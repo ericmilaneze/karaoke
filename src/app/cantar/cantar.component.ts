@@ -15,7 +15,7 @@ export class CantarComponent implements OnInit {
   divContainer: ElementRef;
 
   private defaults = {
-    tempoInicial: 2,
+    tempoInicial: 10,
     ratioLargura: 16,
     ratioAltura: 9,
     alturaMenuMargin: 75,
