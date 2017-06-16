@@ -1,17 +1,17 @@
 <div class="container">
-  
+
   <div class="page-header">
     <div class="row">
         <h2>Adicionar Músicas</h2>
     </div>
   </div>
-  
+
   <div class="well bs-component">
     <form #searchForm="ngForm">
       <fieldset>
         <legend>Buscar nova música</legend>
         <div class="input-group">
-          <input type="text" class="form-control" name="busca" placeholder="Nome da música" 
+          <input type="text" class="form-control" name="busca" placeholder="Nome da música"
             (keyup.enter)="searchYoutube()" [(ngModel)]="busca" required>
           <span class="input-group-btn">
             <button type="button" class="btn btn-default" (click)="searchYoutube()"
@@ -29,27 +29,27 @@
       <button class="btn btn-primary btn-sm" *ngIf="previousToken" (click)="previousPage()"><span class="glyphicon glyphicon-chevron-left"></span> Anterior</button>
       <button class="btn btn-primary btn-sm" *ngIf="nextToken" (click)="nextPage()">Próximo <span class="glyphicon glyphicon-chevron-right"></span></button>
     </div>
-    
+
     <div class="clearfix"></div>
 
     <div *ngFor="let musica of musicas, let i = index" class="musica">
       <div class="thumb hidden-xs">
         <img [src]="musica.snippet.thumbnails.default.url" />
         <div class="youtube">
-          <youtube-player
+          <app-youtube-player
             *ngIf="testando[musica.id.videoId]"
             [videoId]="musica.id.videoId"
             [width]="1"
             [height]="1"
             (ready)="savePlayer($event, musica)"
             (change)="onStateChange($event, musica)">
-          </youtube-player>
+          </app-youtube-player>
         </div>
       </div>
 
       <div class="details">
         <span class="title" [title]="musica.snippet.title">{{ musica.snippet.title }}</span>
-        
+
         <div class="buttons">
           <a [href]="defaults.youtubeURLPrefix + musica.id.videoId" class="btn btn-primary btn-sm" target="_blank">
             <span class="glyphicon glyphicon-eye-open"></span>
@@ -65,7 +65,7 @@
           <span class="label label-danger" *ngIf="musica.erro">Música com problema...</span>
         </div>
       </div>
-      
+
       <div class="clearfix"></div>
     </div>
 

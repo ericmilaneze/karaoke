@@ -2,13 +2,12 @@ import { userInfo } from 'os';
 import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from '../_services/auth.service';
-import { UserInfo } from "firebase";
-import { AngularFire } from "angularfire2";
+import { UserInfo } from 'firebase';
+import { AngularFire } from 'angularfire2';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
 

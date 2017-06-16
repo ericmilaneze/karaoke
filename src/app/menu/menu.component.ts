@@ -1,11 +1,11 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { AngularFire } from "angularfire2";
+import { AngularFire } from 'angularfire2';
 
 import { AuthService } from '../_services/auth.service';
 
 @Component({
-  selector: 'menu',
+  selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
@@ -22,8 +22,7 @@ export class MenuComponent implements OnInit {
     this.af.auth.subscribe(auth => {
       if (auth) {
         this.showingMenu = true;
-      }
-      else {
+      } else {
         this.showingMenu = false;
       }
     });

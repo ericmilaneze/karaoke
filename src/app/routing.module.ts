@@ -6,8 +6,8 @@ import { environment } from '../environments/environment';
 import { LoginComponent } from 'app/login/login.component';
 import { HomeComponent } from 'app/home/home.component';
 import { CanActivateSignedIn } from './_guards/auth.guard';
-import { FilaComponent } from "app/fila/fila.component";
-import { CantarComponent } from "app/cantar/cantar.component";
+import { FilaComponent } from 'app/fila/fila.component';
+import { CantarComponent } from 'app/cantar/cantar.component';
 import { AdicionarMusicaComponent } from './adicionar-musica/adicionar-musica.component';
 
 @NgModule({

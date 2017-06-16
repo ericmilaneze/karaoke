@@ -1,3 +1,22 @@
 {
-    "vsicons.presets.angular": true
+  "vsicons.presets.angular": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/dist": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/bin": true,
+    "**/obj": true,
+    "**/Properties": true,
+    "**/*.gitignore": true,
+    "**/*.editorconfig": true,
+    "**/*.csproj": true,
+    "**/*.csproj.user": true,
+    "**/*.csproj.vspscc": true
+  }
 }

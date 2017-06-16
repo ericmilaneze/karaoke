@@ -1,23 +1,23 @@
 div.proximo, div.semMusicas, div.erro {
-    font-size: 1.7em;
+  font-size: 1.7em;
 }
 
 span.cantor {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: darkorange;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: darkorange;
 }
 
 div.musica {
-    margin-top: 25px;
-    position: relative;
+  margin-top: 25px;
+  position: relative;
 
-    div {
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%, 0);
-    }
+  div {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 0);
+  }
 }

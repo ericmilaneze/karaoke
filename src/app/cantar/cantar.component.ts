@@ -20,7 +20,7 @@ export class CantarComponent implements OnInit {
     ratioAltura: 9,
     alturaMenuMargin: 75,
     offsetAlturaVideo: 25
-  }
+  };
 
   tempo = this.defaults.tempoInicial;
   tocandoMusica: boolean;
@@ -64,8 +64,7 @@ export class CantarComponent implements OnInit {
               .subscribe(t => {
                 if (this.tempo > 0) {
                   this.tempo--;
-                }
-                else {
+                } else {
                   itvSub.unsubscribe();
                   this.tocandoMusica = true;
                   this.carregandoMusica = false;
@@ -93,8 +92,7 @@ export class CantarComponent implements OnInit {
         .subscribe(t => {
           if (this.tempo > 0) {
             this.tempo--;
-          }
-          else {
+          } else {
             itvSub.unsubscribe();
             this.musica.played = true;
             this.musica.erro = true;
@@ -112,13 +110,19 @@ export class CantarComponent implements OnInit {
 
   resize() {
     const alturaTela = window.innerHeight;
-    const largura = +(window.getComputedStyle(this.divContainer.nativeElement, null).getPropertyValue('width').replace('px', ''));
-    const paddingLeft = +window.getComputedStyle(this.divContainer.nativeElement, null).getPropertyValue('padding-left').replace('px', '');
-    const paddingRight = +window.getComputedStyle(this.divContainer.nativeElement, null).getPropertyValue('padding-right').replace('px', '');
+    const largura = +(window
+      .getComputedStyle(this.divContainer.nativeElement, null)
+      .getPropertyValue('width').replace('px', ''));
+    const paddingLeft = (+window
+      .getComputedStyle(this.divContainer.nativeElement, null)
+      .getPropertyValue('padding-left').replace('px', ''));
+    const paddingRight = (+window
+      .getComputedStyle(this.divContainer.nativeElement, null)
+      .getPropertyValue('padding-right').replace('px', ''));
 
     this.larguraVideo = (largura - paddingLeft - paddingRight);
     this.alturaVideo = this.larguraVideo * this.defaults.ratioAltura / this.defaults.ratioLargura;
-    
+
     if (this.alturaVideo > alturaTela - this.defaults.alturaMenuMargin) {
       this.alturaVideo = alturaTela - this.defaults.alturaMenuMargin - this.defaults.offsetAlturaVideo;
       this.larguraVideo = this.alturaVideo * this.defaults.ratioLargura / this.defaults.ratioAltura;

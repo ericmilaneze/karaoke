@@ -1,6 +1,6 @@
 import { Http, URLSearchParams, Response } from '@angular/http';
 import { Injectable, NgZone, EventEmitter } from '@angular/core';
-import { ReplaySubject } from 'rxjs/ReplaySubject'
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 export interface PlayerOutputs {
   ready?: EventEmitter<YT.Player>;
@@ -16,7 +16,7 @@ export interface PlayerSize {
 export class YoutubePlayerService {
   api: ReplaySubject<YT.Player>;
 
-  private isFullscreen: boolean = false;
+  private isFullscreen = false;
   private defaultSizes = {
       height: 270,
       width: 367
@@ -28,15 +28,19 @@ export class YoutubePlayerService {
 
   private createApi () {
     this.api = new ReplaySubject(1);
-    const onYouTubeIframeAPIReady = () => { window && this.api.next((<any>window).YT) }
+    const onYouTubeIframeAPIReady = () => {
+      if (window) {
+        this.api.next((<any>window).YT);
+      }
+    };
     window['onYouTubeIframeAPIReady'] = onYouTubeIframeAPIReady;
   }
 
   loadPlayerApi () {
     const doc = window.document;
-    let playerApiScript = doc.createElement("script");
-    playerApiScript.type = "text/javascript";
-    playerApiScript.src = "https://www.youtube.com/iframe_api";
+    const playerApiScript = doc.createElement('script');
+    playerApiScript.type = 'text/javascript';
+    playerApiScript.src = 'https://www.youtube.com/iframe_api';
     doc.body.appendChild(playerApiScript);
   }
 

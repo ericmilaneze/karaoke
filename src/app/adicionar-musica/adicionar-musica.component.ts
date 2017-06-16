@@ -1,9 +1,9 @@
 import { MusicasDBService } from '../_services/musicas-d-b.service';
 import { Component, OnInit } from '@angular/core';
 
-import { YoutubeSearchService } from "app/adicionar-musica/youtube-search.service";
-import { UserInfo } from "firebase";
-import { AngularFire } from "angularfire2";
+import { YoutubeSearchService } from 'app/adicionar-musica/youtube-search.service';
+import { UserInfo } from 'firebase';
+import { AngularFire } from 'angularfire2';
 
 @Component({
   selector: 'app-adicionar-musica',
@@ -15,7 +15,7 @@ export class AdicionarMusicaComponent implements OnInit {
 
   private defaults = {
     youtubeURLPrefix: 'https://www.youtube.com/watch?v='
-  }
+  };
 
   musicas: any[];
   busca: string;
@@ -27,7 +27,7 @@ export class AdicionarMusicaComponent implements OnInit {
   testando: any[];
 
   processResult = (res) => {
-    let r = res.json();
+    const r = res.json();
     this.musicas = r.items;
     this.nextToken = r.nextPageToken;
     this.previousToken = r.prevPageToken;
@@ -63,7 +63,6 @@ export class AdicionarMusicaComponent implements OnInit {
 
   adicionarMusica(musica) {
     this.testando[musica.id.videoId] = true;
-    //this.musicasDB.adicionarMusica(musica, this.user);
   }
 
   savePlayer(event, musica) {

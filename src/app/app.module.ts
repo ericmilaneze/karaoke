@@ -17,7 +17,7 @@ import { MenuComponent } from './menu/menu.component';
 import { FilaComponent } from './fila/fila.component';
 import { CantarComponent } from './cantar/cantar.component';
 import { AdicionarMusicaComponent } from './adicionar-musica/adicionar-musica.component';
-import { MusicasDBService } from "app/_services/musicas-d-b.service";
+import { MusicasDBService } from './_services/musicas-d-b.service';
 
 @NgModule({
   declarations: [

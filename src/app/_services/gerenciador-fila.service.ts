@@ -12,8 +12,9 @@ export class GerenciadorFilaService {
   retornarProxima(musicas: any[]) {
     const fila = this.retornarFila(musicas);
 
-    if (fila.length > 0)
+    if (fila.length > 0) {
       return fila[0];
+    }
 
     return null;
   }

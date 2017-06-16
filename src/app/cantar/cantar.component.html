@@ -40,14 +40,14 @@
 
   <div class="musica">
     <div>
-      <youtube-player 
-        *ngIf="tocandoMusica" 
+      <app-youtube-player
+        *ngIf="tocandoMusica"
         [videoId]="videoId"
         [width]="larguraVideo"
         [height]="alturaVideo"
         (ready)="savePlayer($event)"
         (change)="onStateChange($event)">
-      </youtube-player>
+      </app-youtube-player>
     </div>
   </div>
 </div>
