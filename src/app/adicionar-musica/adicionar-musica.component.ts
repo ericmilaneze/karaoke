@@ -1,15 +1,14 @@
 import { MusicasDBService } from '../_services/musicas-d-b.service';
 import { Component, OnInit } from '@angular/core';
 
-import { YoutubeSearchService } from 'app/adicionar-musica/youtube-search.service';
 import { UserInfo } from 'firebase';
 import { AngularFire } from 'angularfire2';
+import { YoutubeSearchService } from './youtube-search.service';
 
 @Component({
   selector: 'app-adicionar-musica',
   templateUrl: './adicionar-musica.component.html',
-  styleUrls: ['./adicionar-musica.component.scss'],
-  providers: [YoutubeSearchService]
+  styleUrls: ['./adicionar-musica.component.scss']
 })
 export class AdicionarMusicaComponent implements OnInit {
 

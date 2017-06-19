@@ -10,38 +10,33 @@ import { AppComponent } from './app.component';
 import { AuthService } from './_services/auth.service';
 import { firebaseConfig } from './_settings/firebaseConfig';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { CanActivateSignedIn } from './_guards/auth.guard';
 import { RoutingModule } from './routing.module';
 import { MenuComponent } from './menu/menu.component';
-import { FilaComponent } from './fila/fila.component';
-import { CantarComponent } from './cantar/cantar.component';
-import { AdicionarMusicaComponent } from './adicionar-musica/adicionar-musica.component';
 import { MusicasDBService } from './_services/musicas-d-b.service';
+import { CanActivateSignedInGuard } from './_guards/can-activate-signed-in.guard';
+import { UsuarioService } from './_services/usuario.service';
+import { CanActivateMasterSignedInGuard } from './_guards/can-activate-master-signed-in.guard';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent,
-    MenuComponent,
-    FilaComponent,
-    CantarComponent,
-    AdicionarMusicaComponent
+    MenuComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    RoutingModule,
-    YoutubePlayerModule
+    RoutingModule
   ],
   providers: [
     AuthService,
-    CanActivateSignedIn,
+    CanActivateSignedInGuard,
+    CanActivateMasterSignedInGuard,
     MusicasDBService,
-    GerenciadorFilaService
+    GerenciadorFilaService,
+    UsuarioService
   ],
   bootstrap: [AppComponent]
 })

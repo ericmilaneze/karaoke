@@ -9,7 +9,7 @@ import 'rxjs/add/operator/do';
 import { AuthService } from './../_services/auth.service';
 
 @Injectable()
-export class CanActivateSignedIn implements CanActivate {
+export class CanActivateSignedInGuard implements CanActivate {
   constructor(
     private af: AngularFire,
     private router: Router) { }
@@ -24,7 +24,7 @@ export class CanActivateSignedIn implements CanActivate {
       .map(authState => !!authState)
       .do(authenticated => {
         if (!authenticated) {
-          this.router.navigate(['/login']);
+          this.router.navigate(['login']);
         }
       });
   }

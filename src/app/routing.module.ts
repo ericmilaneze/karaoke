@@ -4,20 +4,32 @@ import { CommonModule } from '@angular/common';
 
 import { environment } from '../environments/environment';
 import { LoginComponent } from 'app/login/login.component';
-import { HomeComponent } from 'app/home/home.component';
-import { CanActivateSignedIn } from './_guards/auth.guard';
-import { FilaComponent } from 'app/fila/fila.component';
-import { CantarComponent } from 'app/cantar/cantar.component';
-import { AdicionarMusicaComponent } from './adicionar-musica/adicionar-musica.component';
+import { CanActivateSignedInGuard } from './_guards/can-activate-signed-in.guard';
+import { CanActivateMasterSignedInGuard } from './_guards/can-activate-master-signed-in.guard';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forRoot([
-      { path: 'adicionar-musica', component: AdicionarMusicaComponent, canActivate: [CanActivateSignedIn] },
-      { path: 'cantar', component: CantarComponent, canActivate: [CanActivateSignedIn] },
-      { path: 'fila', component: FilaComponent, canActivate: [CanActivateSignedIn] },
-      { path: 'home', component: HomeComponent, canActivate: [CanActivateSignedIn] },
+      {
+        path: 'adicionar-musica',
+        loadChildren: './adicionar-musica/adicionar-musica.module#AdicionarMusicaModule',
+        canActivate: [CanActivateSignedInGuard]
+      },
+      {
+        path: 'cantar',
+        loadChildren: './cantar/cantar.module#CantarModule',
+        canActivate: [CanActivateMasterSignedInGuard]
+      },
+      {
+        path: 'fila',
+        loadChildren: './fila/fila.module#FilaModule',
+        canActivate: [CanActivateSignedInGuard] },
+      {
+        path: 'home',
+        loadChildren: './home/home.module#HomeModule',
+        canActivate: [CanActivateSignedInGuard]
+      },
       { path: 'login', component: LoginComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: '**', redirectTo: '/home' }

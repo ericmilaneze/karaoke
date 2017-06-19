@@ -1,28 +1,28 @@
 <div class="navbar navbar-default navbar-fixed-top" *ngIf="showingMenu" id="menu">
-    <div class="container">
-        <div class="navbar-header">
-            <a [routerLink]="['/home']" class="navbar-brand">Karaokê Milaneze</a>
-            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="navbar-collapse collapse" id="navbar-main">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a [routerLink]="['/cantar']"><span class="glyphicon glyphicon-music"></span> Cantar</a>
-                </li>
-                <li>
-                    <a [routerLink]="['/fila']"><span class="glyphicon glyphicon-th-list"></span> Fila</a>
-                </li>
-                <li>
-                    <a [routerLink]="['/adicionar-musica']"><span class="glyphicon glyphicon-plus-sign"></span> Adicionar Música</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" (click)="logout()"><span class="glyphicon glyphicon-log-out"></span> Sair</a></li>
-            </ul>
-        </div>
+  <div class="container">
+    <div class="navbar-header">
+      <a [routerLink]="['/home']" class="navbar-brand">Karaokê Milaneze</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
+    <div class="navbar-collapse collapse" id="navbar-main" #idMain>
+      <ul class="nav navbar-nav">
+        <li *ngIf="showingCantar">
+          <a [routerLink]="['/cantar']" (click)="esconderMenu()"><span class="glyphicon glyphicon-music"></span> Cantar</a>
+        </li>
+        <li>
+          <a [routerLink]="['/fila']" (click)="esconderMenu()"><span class="glyphicon glyphicon-th-list"></span> Fila</a>
+        </li>
+        <li>
+          <a [routerLink]="['/adicionar-musica']" (click)="esconderMenu()"><span class="glyphicon glyphicon-plus-sign"></span> Adicionar Música</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" (click)="logout()"><span class="glyphicon glyphicon-log-out"></span> Sair</a></li>
+      </ul>
+    </div>
+  </div>
 </div>

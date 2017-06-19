@@ -16,7 +16,9 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  private navigateHome = () => this.router.navigate(['home']);
+  private navigateHome = () => {
+    this.router.navigate(['home']);
+  }
 
   loginGoogle() {
     this.authService.authenticateGoogle()

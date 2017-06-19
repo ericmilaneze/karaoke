@@ -48,7 +48,7 @@ export class CantarComponent implements OnInit {
   ngOnInit() {
     this.resize();
 
-    this.musicasDB.retornarMusicas()
+    this.musicasDB.obterMusicas()
       .subscribe(ms => {
         if (!this.carregandoMusica && !this.mostrandoErro && !this.tocandoMusica) {
           this.musica = this.gerenciadorFila.retornarProxima(ms);
@@ -82,6 +82,7 @@ export class CantarComponent implements OnInit {
       this.musica.played = true;
       this.musica.erro = false;
       this.tocandoMusica = false;
+      this.musicasDB.definirMusicaComoTocada(this.musica);
       this.musicasDB.atualizarMusicas(this.musica);
     } else if (this.musicaComErro) {
       this.mostrandoErro = true;

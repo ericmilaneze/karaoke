@@ -5,10 +5,11 @@ import { UserInfo } from 'firebase';
 @Injectable()
 export class MusicasDBService {
 
-  constructor(private af: AngularFire) { }
+  constructor(
+    private af: AngularFire) { }
 
   adicionarMusica(musica, user: UserInfo) {
-    const musicas = this.af.database.list('/musicas');
+    const musicas = this.obterMusicas();
 
     musica.user = JSON.parse(JSON.stringify(user));
     musica.added = true;
@@ -17,11 +18,31 @@ export class MusicasDBService {
     musicas.push(musica);
   }
 
-  retornarMusicas() {
+  obterMusicas() {
     return this.af.database.list('/musicas');
+  }
+
+  obterMusicasTocadas() {
+    return this.af.database.list('/musicas-tocadas');
+  }
+
+  obterMusicasComErro() {
+    return this.af.database.list('/musicas-erro');;
   }
 
   atualizarMusicas(musica) {
     return this.af.database.object('/musicas/' + musica.$key).update(musica);
+  }
+
+  definirMusicaComoTocada(musica) {
+    const musicasTocadas = this.obterMusicasTocadas();
+
+    musicasTocadas.push(musica.$key);
+  }
+
+  definirMusicaComErro(musica) {
+    const musicasComErro = this.obterMusicasComErro();
+
+    musicasComErro.push(musica.$key);
   }
 }

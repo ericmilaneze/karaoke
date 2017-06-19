@@ -17,7 +17,7 @@ export class FilaComponent implements OnInit {
     private gerenciadorFila: GerenciadorFilaService) { }
 
   ngOnInit() {
-    this.musicasDB.retornarMusicas()
+    this.musicasDB.obterMusicas()
       .subscribe(ms => this.musicas = this.gerenciadorFila.retornarFila(ms));
   }
 
