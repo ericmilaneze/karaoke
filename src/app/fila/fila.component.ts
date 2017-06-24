@@ -1,7 +1,7 @@
-import { GerenciadorFilaService } from '../_services/gerenciador-fila.service';
 import { Observable } from 'rxjs/Rx';
-import { MusicasDBService } from '../_services/musicas-d-b.service';
 import { Component, OnInit } from '@angular/core';
+
+import { GerenciadorFilaService } from '../_services/gerenciador-fila.service';
 
 @Component({
   selector: 'app-fila',
@@ -13,12 +13,12 @@ export class FilaComponent implements OnInit {
   musicas: any[];
 
   constructor(
-    private musicasDB: MusicasDBService,
     private gerenciadorFila: GerenciadorFilaService) { }
 
   ngOnInit() {
-    this.musicasDB.obterMusicas()
-      .subscribe(ms => this.musicas = this.gerenciadorFila.retornarFila(ms));
+    this.gerenciadorFila.obterFila()
+      .do(ms => console.log(ms))
+      .subscribe(ms => this.musicas = ms);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscriber } from 'rxjs/Rx';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { MusicasDBService } from '../_services/musicas-d-b.service';
@@ -48,57 +48,52 @@ export class CantarComponent implements OnInit {
   ngOnInit() {
     this.resize();
 
-    this.musicasDB.obterMusicas()
-      .subscribe(ms => {
-        if (!this.carregandoMusica && !this.mostrandoErro && !this.tocandoMusica) {
-          this.musica = this.gerenciadorFila.retornarProxima(ms);
+    this.gerenciadorFila.obterProxima().subscribe(ms => {
+      if (!this.carregandoMusica && !this.mostrandoErro && !this.tocandoMusica) {
+        this.musica = ms;
 
-          if (this.musica) {
-            this.tempo = this.defaults.tempoInicial;
-            this.carregandoMusica = true;
-            this.videoId = this.musica.id.videoId;
+        if (this.musica) {
+          this.tempo = this.defaults.tempoInicial;
+          this.carregandoMusica = true;
+          this.videoId = this.musica.id.videoId;
 
-            this.tocandoMusica = false;
+          this.tocandoMusica = false;
 
-            const itvSub = Observable.interval(1000)
-              .subscribe(t => {
-                if (this.tempo > 0) {
-                  this.tempo--;
-                } else {
-                  itvSub.unsubscribe();
-                  this.tocandoMusica = true;
-                  this.carregandoMusica = false;
-                }
-              });
-          }
+          const itvSub = Observable.interval(1000)
+            .subscribe(t => {
+              if (this.tempo > 0) {
+                this.tempo--;
+              } else {
+                this.tocandoMusica = true;
+                this.carregandoMusica = false;
+
+                itvSub.unsubscribe();
+              }
+            });
         }
-      });
+      }
+    });
   }
 
   onStateChange(event) {
     this.state = event.data;
 
     if (this.musicaTerminada) {
-      this.musica.played = true;
-      this.musica.erro = false;
       this.tocandoMusica = false;
       this.musicasDB.definirMusicaComoTocada(this.musica);
-      this.musicasDB.atualizarMusicas(this.musica);
     } else if (this.musicaComErro) {
       this.mostrandoErro = true;
       this.tocandoMusica = false;
       this.tempo = this.defaults.tempoInicial;
 
       const itvSub = Observable.interval(1000)
+        .first()
         .subscribe(t => {
           if (this.tempo > 0) {
             this.tempo--;
           } else {
-            itvSub.unsubscribe();
-            this.musica.played = true;
-            this.musica.erro = true;
             this.mostrandoErro = false;
-            this.musicasDB.atualizarMusicas(this.musica);
+            this.musicasDB.definirMusicaComErro(this.musica);
           }
         });
     }
