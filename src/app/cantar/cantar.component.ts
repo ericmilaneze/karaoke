@@ -45,6 +45,8 @@ export class CantarComponent implements OnInit {
         this.musica = ms;
 
         if (this.musica) {
+          this.musicasDB.definirMusicaAtual(this.musica.$key);
+
           this.tempo = this.defaults.tempoInicial;
           this.carregandoMusica = true;
           this.videoId = this.musica.id.videoId;

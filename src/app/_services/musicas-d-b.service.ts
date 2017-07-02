@@ -18,6 +18,16 @@ export class MusicasDBService {
     musicas.push(musica);
   }
 
+  obterMusicaAtual() {
+    return this.af.database.object('/musica-atual')
+      .map(ma => ma.$value)
+      .subscribe(ma => console.log(ma));
+  }
+
+  definirMusicaAtual(idMusicaAtual) {
+    return this.af.database.object('/musica-atual').set(idMusicaAtual);
+  }
+
   obterMusicas() {
     return this.af.database.list('/musicas');
   }

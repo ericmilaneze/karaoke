@@ -5,17 +5,22 @@
       ".write": "auth != null"
     },
 
+    "musica-atual": {
+      ".write": "root.child('usuarios/master').val() === auth.uid",
+      ".read": "auth != null"
+    },
+
   	"musicas-tocadas": {
       ".write": "root.child('usuarios/master').val() === auth.uid",
       ".read": "auth != null"
     },
 
-	"musicas-erro": {
+	  "musicas-erro": {
       ".write": "root.child('usuarios/master').val() === auth.uid",
       ".read": "auth != null"
     },
 
-	"musicas-prioridade": {
+	  "musicas-prioridade": {
       ".write": "root.child('usuarios/master').val() === auth.uid",
       ".read": "auth != null"
     },
