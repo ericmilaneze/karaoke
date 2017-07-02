@@ -1,5 +1,5 @@
 <div class="container">
-  
+
   <div class="page-header">
     <div class="row">
         <h2>Fila de Músicas</h2>
@@ -19,6 +19,16 @@
         </div>
       </div>
       <div class="clearfix"></div>
+      <div *ngIf="isUsuarioMaster" class="master">
+        <a class="btn btn-primary" href="javascript:void(0)" role="button" *ngIf="!musica.prioridade" (click)="darPrioridade(musica)">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          Prioridade
+        </a>
+        <a class="btn btn-danger" href="javascript:void(0)" role="button" *ngIf="musica.prioridade" (click)="tirarPrioridade(musica)">
+          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+          Prioridade
+        </a>
+      </div>
     </div>
   </div>
   <div *ngIf="musicas?.length == 0">

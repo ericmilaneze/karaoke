@@ -33,14 +33,6 @@ export class CantarComponent implements OnInit {
   larguraVideo: number;
   alturaVideo: number;
 
-  get musicaTerminada() {
-    return this.state === 0;
-  }
-
-  get musicaComErro() {
-    return this.state === -1;
-  }
-
   constructor(
     private musicasDB: MusicasDBService,
     private gerenciadorFila: GerenciadorFilaService) { }
@@ -78,22 +70,23 @@ export class CantarComponent implements OnInit {
   onStateChange(event) {
     this.state = event.data;
 
-    if (this.musicaTerminada) {
+    if (this.state === 0) { // música terminada
       this.tocandoMusica = false;
       this.musicasDB.definirMusicaComoTocada(this.musica);
-    } else if (this.musicaComErro) {
+    } else if (this.state === -1) { // música com erro
       this.mostrandoErro = true;
       this.tocandoMusica = false;
       this.tempo = this.defaults.tempoInicial;
 
       const itvSub = Observable.interval(1000)
-        .first()
         .subscribe(t => {
           if (this.tempo > 0) {
             this.tempo--;
           } else {
             this.mostrandoErro = false;
             this.musicasDB.definirMusicaComErro(this.musica);
+
+            itvSub.unsubscribe();
           }
         });
     }

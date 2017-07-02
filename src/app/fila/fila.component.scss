@@ -3,6 +3,12 @@ div.musica {
   border: 1px dotted gray;
   padding: 5px;
 
+  div.master {
+    margin-top: 5px;
+    border: 1px dashed black;
+    padding: 5px;
+  }
+
   div.thumb {
     float: left;
     border: none;

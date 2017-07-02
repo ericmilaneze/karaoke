@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "musicas": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    
+  	"musicas-tocadas": {
+      ".write": "root.child('usuarios/master').val() === auth.uid",
+      ".read": "auth != null"
+    },
+	
+	"musicas-erro": {
+      ".write": "root.child('usuarios/master').val() === auth.uid",
+      ".read": "auth != null"
+    },
+      
+    "usuarios": {
+      ".read": "auth != null",
+      ".write": "false"
+    }
+  }
+}

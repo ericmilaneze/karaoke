@@ -30,6 +30,10 @@ export class MusicasDBService {
     return this.af.database.list('/musicas-erro');;
   }
 
+  obterMusicasComPrioridade() {
+    return this.af.database.list('/musicas-prioridade');
+  }
+
   atualizarMusicas(musica) {
     return this.af.database.object('/musicas/' + musica.$key).update(musica);
   }
@@ -37,12 +41,22 @@ export class MusicasDBService {
   definirMusicaComoTocada(musica) {
     const musicasTocadas = this.obterMusicasTocadas();
 
-    musicasTocadas.push(musica.$key);
+    return musicasTocadas.push(musica.$key);
   }
 
   definirMusicaComErro(musica) {
     const musicasComErro = this.obterMusicasComErro();
 
-    musicasComErro.push(musica.$key);
+    return musicasComErro.push(musica.$key);
+  }
+
+  darPrioridade(musica) {
+    const musicasComPrioridade = this.obterMusicasComPrioridade();
+
+    return musicasComPrioridade.push(musica.$key);
+  }
+
+  tirarPrioridade(prioridadeId) {
+    return this.obterMusicasComPrioridade().remove(prioridadeId);
   }
 }
