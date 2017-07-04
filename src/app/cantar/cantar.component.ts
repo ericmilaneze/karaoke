@@ -1,5 +1,6 @@
 import { Observable, Subscriber } from 'rxjs/Rx';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Subscription } from "rxjs/Subscription";
 
 import { MusicasDBService } from '../_services/musicas-d-b.service';
 import { GerenciadorFilaService } from '../_services/gerenciador-fila.service';
@@ -40,11 +41,17 @@ export class CantarComponent implements OnInit {
   ngOnInit() {
     this.resize();
 
-    this.gerenciadorFila.obterProxima().subscribe(ms => {
-      if (!this.carregandoMusica && !this.mostrandoErro && !this.tocandoMusica) {
-        this.musica = ms;
+    let itvSub: Subscription;
 
-        if (this.musica) {
+    this.gerenciadorFila.obterProxima()
+      .subscribe(ms => {
+        if (!this.musica || (!!this.musica && !!ms && this.musica.$key !== ms.$key)) {
+          if (!!itvSub) {
+            itvSub.unsubscribe();
+          }
+
+          this.musica = ms;
+
           this.musicasDB.definirMusicaAtual(this.musica.$key);
 
           this.tempo = this.defaults.tempoInicial;
@@ -53,7 +60,7 @@ export class CantarComponent implements OnInit {
 
           this.tocandoMusica = false;
 
-          const itvSub = Observable.interval(1000)
+          itvSub = Observable.interval(1000)
             .subscribe(t => {
               if (this.tempo > 0) {
                 this.tempo--;
@@ -64,8 +71,12 @@ export class CantarComponent implements OnInit {
                 itvSub.unsubscribe();
               }
             });
+        } else if (!ms) {
+          this.musica = null;
+          this.tocandoMusica = false;
+          this.carregandoMusica = false;
+          this.mostrandoErro = false;
         }
-      }
     });
   }
 

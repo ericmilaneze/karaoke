@@ -15,18 +15,26 @@
         <span class="title" [title]="musica.snippet.title">{{ index + 1 }}. {{ musica.snippet.title }}</span>
         <div class="cantor">
           <img [src]="musica.user.photoURL" width="50" />
-          Cantor: {{ musica.user.displayName }}
+          Cantor(a): {{ musica.user.displayName }}
         </div>
       </div>
       <div class="clearfix"></div>
       <div *ngIf="isUsuarioMaster" class="master">
-        <a class="btn btn-primary" href="javascript:void(0)" role="button" *ngIf="!musica.prioridade" (click)="darPrioridade(musica)">
+        <a class="btn btn-primary" href="javascript:void(0)" role="button" *ngIf="!musica.prioridade && !musica.atual" (click)="darPrioridade(musica)">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           Prioridade
         </a>
-        <a class="btn btn-danger" href="javascript:void(0)" role="button" *ngIf="musica.prioridade" (click)="tirarPrioridade(musica)">
+        <a class="btn btn-danger" href="javascript:void(0)" role="button" *ngIf="musica.prioridade && !musica.atual" (click)="tirarPrioridade(musica)">
           <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
           Prioridade
+        </a>
+        <a class="btn btn-primary" href="javascript:void(0)" role="button" (click)="definirMusicaComoErrada(musica)">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          Erro
+        </a>
+        <a class="btn btn-primary" href="javascript:void(0)" role="button" (click)="definirMusicaComoTocada(musica)">
+          <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+          Tocada
         </a>
       </div>
     </div>

@@ -48,4 +48,12 @@ export class FilaComponent implements OnInit {
     this.db.tirarPrioridade(musica.prioridadeId);
   }
 
+  definirMusicaComoErrada(musica) {
+    this.db.definirMusicaComoTocada(musica);
+  }
+
+  definirMusicaComoTocada(musica) {
+    this.db.definirMusicaComErro(musica);
+  }
+
 }

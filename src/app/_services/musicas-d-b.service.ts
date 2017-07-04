@@ -20,8 +20,7 @@ export class MusicasDBService {
 
   obterMusicaAtual() {
     return this.af.database.object('/musica-atual')
-      .map(ma => ma.$value)
-      .subscribe(ma => console.log(ma));
+      .map(ma => ma.$value);
   }
 
   definirMusicaAtual(idMusicaAtual) {

@@ -12,69 +12,95 @@ export class GerenciadorFilaService {
     const obsMusicasTocadas = this.musicasDB.obterMusicasTocadas();
     const obsMusicasComErro = this.musicasDB.obterMusicasComErro();
     const obsMusicasComPrioridade = this.musicasDB.obterMusicasComPrioridade();
+    const obsMusicaAtual = this.musicasDB.obterMusicaAtual();
 
     return obsMusicas.switchMap(musicas =>
       obsMusicasTocadas.switchMap(idsMusicasTocadas => {
         return obsMusicasComErro.switchMap(idsMusicasComErro => {
-          return obsMusicasComPrioridade.map(idsMusicasComPrioridade => {
-            // limpando todas músicas
-            for (const musica of musicas) {
-              musica.tocada = false;
-              musica.erro = false;
-              musica.prioridade = false;
-              musica.prioridadeId = null;
-            }
-
-            // músicas tocadas
-            for (const idMusicaTocada of idsMusicasTocadas) {
-              const musicaTocada = musicas.find(m => m.$key === idMusicaTocada.$value);
-
-              if (!!musicaTocada) {
-                musicaTocada.tocada = true;
+          return obsMusicasComPrioridade.switchMap(idsMusicasComPrioridade => {
+            return obsMusicaAtual.map(idMusicaAtual => {
+              // limpando todas músicas
+              for (const musica of musicas) {
+                musica.tocada = false;
+                musica.erro = false;
+                musica.prioridade = false;
+                musica.prioridadeId = null;
+                musica.atual = false;
               }
-            }
 
-            // músicas com erro
-            for (const idMusicaComErro of idsMusicasComErro) {
-              const musicaComErro = musicas.find(m => m.$key === idMusicaComErro.$value);
+              // músicas tocadas
+              for (const idMusicaTocada of idsMusicasTocadas) {
+                const musicaTocada = musicas.find(m => m.$key === idMusicaTocada.$value);
 
-              if (!!musicaComErro) {
-                musicaComErro.erro = true;
+                if (!!musicaTocada) {
+                  musicaTocada.tocada = true;
+                }
               }
-            }
 
-            // músicas com prioridade
-            const musicasComPrioridade = [];
+              // músicas com erro
+              for (const idMusicaComErro of idsMusicasComErro) {
+                const musicaComErro = musicas.find(m => m.$key === idMusicaComErro.$value);
 
-            for (const idMusicaComPrioridade of idsMusicasComPrioridade) {
-              const musicaComPrioridade = musicas.find(m => m.$key === idMusicaComPrioridade.$value);
-
-              if (!!musicaComPrioridade && !musicaComPrioridade.erro && !musicaComPrioridade.tocada) {
-                musicaComPrioridade.prioridade = true;
-                musicaComPrioridade.prioridadeId = idMusicaComPrioridade.$key;
-
-                // dessa forma, mantenho a ordem em que as músicas são colocadas como prioridade
-                musicasComPrioridade.push(musicaComPrioridade);
+                if (!!musicaComErro) {
+                  musicaComErro.erro = true;
+                }
               }
-            }
 
-            // músicas que ainda serão reproduzidas na fila (sem ordem)
-            const proximasMusicas = musicas.filter(m => !m.tocada && !m.erro);
+              // música atual
+              const musicaAtual = musicas.find(m => m.$key === idMusicaAtual && !m.erro && !m.tocada);
 
-            // fila que será retornada
-            const fila = [];
+              if (!!musicaAtual) {
+                musicaAtual.atual = true;
+              }
 
-            // adicionando as músicas com prioridade na fila
-            for (const musicaComPrioridade of musicasComPrioridade) {
-              fila.push(musicaComPrioridade);
-            }
+              // músicas com prioridade
+              const musicasComPrioridade = [];
 
-            // adicionando o que restou (não é prioridade)
-            for (const proximaMusica of proximasMusicas.filter(pm => !pm.prioridade)) {
-              fila.push(proximaMusica);
-            }
+              for (const idMusicaComPrioridade of idsMusicasComPrioridade) {
+                const musicaComPrioridade = musicas.find(m => m.$key === idMusicaComPrioridade.$value);
 
-            return fila;
+                if (
+                  !!musicaComPrioridade &&
+                  !musicaComPrioridade.erro &&
+                  !musicaComPrioridade.tocada &&
+                  !musicaComPrioridade.atual) {
+
+                  musicaComPrioridade.prioridade = true;
+                  musicaComPrioridade.prioridadeId = idMusicaComPrioridade.$key;
+
+                  // dessa forma, mantenho a ordem em que as músicas são colocadas como prioridade
+                  musicasComPrioridade.push(musicaComPrioridade);
+                }
+              }
+
+              // fila que será retornada
+              const fila = [];
+
+              // adicionando a música atual como primeira da fila
+              if (!!musicaAtual) {
+                fila.push(musicaAtual);
+              }
+
+              // adicionando as músicas com prioridade na fila
+              for (const musicaComPrioridade of musicasComPrioridade) {
+                fila.push(musicaComPrioridade);
+              }
+
+              // músicas que ainda serão reproduzidas na fila (sem ordem)
+              const proximasMusicas = musicas.filter(m =>
+                !m.tocada &&
+                !m.erro &&
+                !m.prioridade && // não é prioridade
+                !m.atual // não é atual
+              );
+
+              // adicionando o que restou (não é prioridade, nem atual)
+              for (const proximaMusica of proximasMusicas) {
+                fila.push(proximaMusica);
+              }
+
+              return fila;
+            });
           });
         });
       }));
