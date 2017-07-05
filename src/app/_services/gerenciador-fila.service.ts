@@ -19,6 +19,8 @@ export class GerenciadorFilaService {
         return obsMusicasComErro.switchMap(idsMusicasComErro => {
           return obsMusicasComPrioridade.switchMap(idsMusicasComPrioridade => {
             return obsMusicaAtual.map(idMusicaAtual => {
+              const musicasTocadas = [];
+
               // limpando todas músicas
               for (const musica of musicas) {
                 musica.tocada = false;
@@ -26,6 +28,7 @@ export class GerenciadorFilaService {
                 musica.prioridade = false;
                 musica.prioridadeId = null;
                 musica.atual = false;
+                musica.primeiraVez = false;
               }
 
               // músicas tocadas
@@ -34,6 +37,8 @@ export class GerenciadorFilaService {
 
                 if (!!musicaTocada) {
                   musicaTocada.tocada = true;
+
+                  musicasTocadas.push(musicaTocada);
                 }
               }
 
@@ -86,17 +91,35 @@ export class GerenciadorFilaService {
                 fila.push(musicaComPrioridade);
               }
 
-              // músicas que ainda serão reproduzidas na fila (sem ordem)
-              const proximasMusicas = musicas.filter(m =>
+              // pegar músicas de usuários que ainda não cantaram
+              for (
+                const proximaMusica of
+                  musicas.filter(m =>
+                    !m.tocada &&
+                    !m.erro &&
+                    !m.prioridade &&
+                    !m.atual)) {
+
+                if (
+                  musicasTocadas.findIndex(mt => mt.user.uid === proximaMusica.user.uid) === -1 &&
+                  fila.findIndex(mf => mf.user.uid === proximaMusica.user.uid) === -1) {
+
+                  proximaMusica.primeiraVez = true;
+
+                  fila.push(proximaMusica);
+                }
+              }
+
+              const musicasRestantes = musicas.filter(m =>
                 !m.tocada &&
                 !m.erro &&
-                !m.prioridade && // não é prioridade
-                !m.atual // não é atual
-              );
+                !m.prioridade &&
+                !m.atual &&
+                !m.primeiraVez);
 
               // adicionando o que restou (não é prioridade, nem atual)
-              for (const proximaMusica of proximasMusicas) {
-                fila.push(proximaMusica);
+              for (const mr of musicasRestantes) {
+                fila.push(mr);
               }
 
               return fila;

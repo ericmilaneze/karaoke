@@ -49,11 +49,11 @@ export class FilaComponent implements OnInit {
   }
 
   definirMusicaComoErrada(musica) {
-    this.db.definirMusicaComoTocada(musica);
+    this.db.definirMusicaComErro(musica);
   }
 
   definirMusicaComoTocada(musica) {
-    this.db.definirMusicaComErro(musica);
+    this.db.definirMusicaComoTocada(musica);
   }
 
 }
