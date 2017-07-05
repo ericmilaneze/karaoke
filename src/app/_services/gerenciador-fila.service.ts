@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { MusicasDBService } from './musicas-d-b.service';
+import { Musica } from '../_models/musica';
+import { FBItem } from '../_models/fb-item';
 
 @Injectable()
 export class GerenciadorFilaService {
@@ -14,13 +16,11 @@ export class GerenciadorFilaService {
     const obsMusicasComPrioridade = this.musicasDB.obterMusicasComPrioridade();
     const obsMusicaAtual = this.musicasDB.obterMusicaAtual();
 
-    return obsMusicas.switchMap(musicas =>
-      obsMusicasTocadas.switchMap(idsMusicasTocadas => {
-        return obsMusicasComErro.switchMap(idsMusicasComErro => {
-          return obsMusicasComPrioridade.switchMap(idsMusicasComPrioridade => {
-            return obsMusicaAtual.map(idMusicaAtual => {
-              const musicasTocadas = [];
-
+    return obsMusicas.switchMap((musicas: Musica[]) =>
+      obsMusicasTocadas.switchMap((idsMusicasTocadas: FBItem[]) => {
+        return obsMusicasComErro.switchMap((idsMusicasComErro: FBItem[]) => {
+          return obsMusicasComPrioridade.switchMap((idsMusicasComPrioridade: FBItem[]) => {
+            return obsMusicaAtual.map((idMusicaAtual: string) => {
               // limpando todas músicas
               for (const musica of musicas) {
                 musica.tocada = false;
@@ -32,6 +32,8 @@ export class GerenciadorFilaService {
               }
 
               // músicas tocadas
+              const musicasTocadas: Musica[] = [];
+
               for (const idMusicaTocada of idsMusicasTocadas) {
                 const musicaTocada = musicas.find(m => m.$key === idMusicaTocada.$value);
 
@@ -110,6 +112,7 @@ export class GerenciadorFilaService {
                 }
               }
 
+              // adicionando o que restou (não é prioridade, nem atual)
               const musicasRestantes = musicas.filter(m =>
                 !m.tocada &&
                 !m.erro &&
@@ -117,7 +120,6 @@ export class GerenciadorFilaService {
                 !m.atual &&
                 !m.primeiraVez);
 
-              // adicionando o que restou (não é prioridade, nem atual)
               for (const mr of musicasRestantes) {
                 fila.push(mr);
               }
