@@ -33,6 +33,7 @@ export class CantarComponent implements OnInit {
   videoId: string;
   larguraVideo: number;
   alturaVideo: number;
+  itvSub: Subscription;
 
   constructor(
     private musicasDB: MusicasDBService,
@@ -41,13 +42,11 @@ export class CantarComponent implements OnInit {
   ngOnInit() {
     this.resize();
 
-    let itvSub: Subscription;
-
     this.gerenciadorFila.obterProxima()
       .subscribe(ms => {
         if (!this.musica || (!!this.musica && !!ms && this.musica.$key !== ms.$key)) {
-          if (!!itvSub) {
-            itvSub.unsubscribe();
+          if (!!this.itvSub) {
+            this.itvSub.unsubscribe();
           }
 
           this.musica = ms;
@@ -60,7 +59,7 @@ export class CantarComponent implements OnInit {
 
           this.tocandoMusica = false;
 
-          itvSub = Observable.interval(1000)
+          this.itvSub = Observable.interval(1000)
             .subscribe(t => {
               if (this.tempo > 0) {
                 this.tempo--;
@@ -68,7 +67,7 @@ export class CantarComponent implements OnInit {
                 this.tocandoMusica = true;
                 this.carregandoMusica = false;
 
-                itvSub.unsubscribe();
+                this.itvSub.unsubscribe();
               }
             });
         } else if (!ms) {
@@ -91,7 +90,7 @@ export class CantarComponent implements OnInit {
       this.tocandoMusica = false;
       this.tempo = this.defaults.tempoInicial;
 
-      const itvSub = Observable.interval(1000)
+      this.itvSub = Observable.interval(1000)
         .subscribe(t => {
           if (this.tempo > 0) {
             this.tempo--;
@@ -99,7 +98,7 @@ export class CantarComponent implements OnInit {
             this.mostrandoErro = false;
             this.musicasDB.definirMusicaComErro(this.musica);
 
-            itvSub.unsubscribe();
+            this.itvSub.unsubscribe();
           }
         });
     }
