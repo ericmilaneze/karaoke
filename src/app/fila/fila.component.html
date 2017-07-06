@@ -36,7 +36,9 @@
           <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
           Tocada
         </a>
-        <span *ngIf="musica.primeiraVez" class="label label-info">Primeira Vez</span>
+
+        <span *ngIf="musica.atual" class="label label-success">Tocando</span>
+        <span *ngIf="musica.primeiraVez" class="label label-info">Primeira</span>
       </div>
     </div>
   </div>

@@ -112,7 +112,20 @@ export class GerenciadorFilaService {
                 }
               }
 
-              // adicionando o que restou (não é prioridade, nem atual)
+              // músicas tocadas + fila
+              const musTocadasMaisFila: Musica[] = [];
+
+              for (const mt of musicasTocadas) {
+                musTocadasMaisFila.push(mt);
+              }
+
+              for (const mf of fila) {
+                musTocadasMaisFila.push(mf);
+              }
+
+              const musTocadasMaisFilaInvertida = musTocadasMaisFila.reverse();
+
+              // pegando o que restou (não é prioridade, nem primeira vez, nem atual)
               const musicasRestantes = musicas.filter(m =>
                 !m.tocada &&
                 !m.erro &&
@@ -120,8 +133,45 @@ export class GerenciadorFilaService {
                 !m.atual &&
                 !m.primeiraVez);
 
-              for (const mr of musicasRestantes) {
-                fila.push(mr);
+              if (musicasRestantes.length > 0) {
+                const musRestantesComIndice: { ix: number, m: Musica }[] = [];
+
+                for (const mr of musicasRestantes) {
+                  const i = musTocadasMaisFilaInvertida.findIndex(mtmfi => mtmfi.user.uid === mr.user.uid);
+
+                  musRestantesComIndice.push({ ix: i, m: mr });
+                }
+
+                // ordem das músicas conforme a ordem de cantores (repetindo os cantores ainda)
+                musRestantesComIndice.sort((a, b) => a.ix - b.ix).reverse();
+
+                const caixas: Musica[][] = [];
+                let uidCantorAtual = '';
+                let ixCaixaAtual = 0;
+                let caixaAtual: Musica[] = [];
+
+                for (const mr of musRestantesComIndice) {
+                  if (uidCantorAtual !== mr.m.user.uid) {
+                    ixCaixaAtual = 0;
+                    uidCantorAtual = mr.m.user.uid;
+                  }
+
+                  caixaAtual = caixas[ixCaixaAtual];
+
+                  if (!caixaAtual) {
+                    caixaAtual = [];
+                    caixas.push(caixaAtual);
+                  }
+
+                  caixaAtual.push(mr.m);
+                  ixCaixaAtual++;
+                }
+
+                for (const caixa of caixas) {
+                  for (const musica of caixa) {
+                    fila.push(musica);
+                  }
+                }
               }
 
               return fila;
