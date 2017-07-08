@@ -1,6 +1,7 @@
-import { RequestOptionsArgs } from '@angular/http/src/interfaces';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
+
+import { Musica } from '../_models/musica';
 
 @Injectable()
 export class YoutubeSearchService {

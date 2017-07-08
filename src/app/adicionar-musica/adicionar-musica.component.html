@@ -18,6 +18,12 @@
               [disabled]="!searchForm.form.valid"><span class="glyphicon glyphicon-search"></span> Buscar</button>
           </span>
         </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="somenteComKaraoke" [(ngModel)]="somenteComKaraoke">
+            Somente com "Karaokê" no título
+          </label>
+        </div>
       </fieldset>
     </form>
   </div>
@@ -32,7 +38,7 @@
 
     <div class="clearfix"></div>
 
-    <div *ngFor="let musica of musicas, let i = index" class="musica">
+    <div *ngFor="let musica of musicas, let i = index" class="musica" [hidden]="!filtrarTemKaraokeNoTitulo(musica.snippet.title)">
       <div class="thumb hidden-xs">
         <img [src]="musica.snippet.thumbnails.default.url" />
         <div class="youtube">

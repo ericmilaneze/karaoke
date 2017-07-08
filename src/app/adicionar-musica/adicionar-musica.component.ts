@@ -1,9 +1,10 @@
-import { MusicasDBService } from '../_services/musicas-d-b.service';
 import { Component, OnInit } from '@angular/core';
-
 import { UserInfo } from 'firebase';
 import { AngularFire } from 'angularfire2';
+
 import { YoutubeSearchService } from './youtube-search.service';
+import { Musica } from '../_models/musica';
+import { MusicasDBService } from '../_services/musicas-d-b.service';
 
 @Component({
   selector: 'app-adicionar-musica',
@@ -17,9 +18,10 @@ export class AdicionarMusicaComponent implements OnInit {
     tempoEsperaMobile: 6000
   };
 
-  musicas: any[];
+  musicas: Musica[];
   busca: string;
   buscaAtual: string;
+  somenteComKaraoke: boolean;
   nextToken: string;
   previousToken: string;
   user: UserInfo;
@@ -28,9 +30,9 @@ export class AdicionarMusicaComponent implements OnInit {
 
   private processResult = (res) => {
     const r = res.json();
-    this.musicas = r.items;
     this.nextToken = r.nextPageToken;
     this.previousToken = r.prevPageToken;
+    this.musicas = r.items;
   }
 
   private isMobile() {
@@ -90,6 +92,7 @@ export class AdicionarMusicaComponent implements OnInit {
   ngOnInit() {
     this.testando = [];
     this.players = [];
+    this.somenteComKaraoke = true;
     this.af.auth.subscribe(authState => this.user = authState.auth);
   }
 
@@ -112,6 +115,14 @@ export class AdicionarMusicaComponent implements OnInit {
 
   adicionarMusica(musica) {
     this.testando[musica.id.videoId] = true;
+  }
+
+  filtrarTemKaraokeNoTitulo(titulo: string) {
+    if (!this.somenteComKaraoke) {
+      return true;
+    }
+
+    return /karaoke|karaokê|caraokê|caraoke/.test(titulo.toLowerCase());
   }
 
   savePlayer(event, musica) {
@@ -142,5 +153,4 @@ export class AdicionarMusicaComponent implements OnInit {
       }
     }
   }
-
 }
