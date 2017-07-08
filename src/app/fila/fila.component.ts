@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Rx';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFire } from 'angularfire2';
+import { Subscription } from 'rxjs/Subscription';
 
 import { GerenciadorFilaService } from '../_services/gerenciador-fila.service';
 import { UsuarioService } from '../_services/usuario.service';
@@ -11,10 +12,11 @@ import { MusicasDBService } from '../_services/musicas-d-b.service';
   templateUrl: './fila.component.html',
   styleUrls: ['./fila.component.scss']
 })
-export class FilaComponent implements OnInit {
+export class FilaComponent implements OnInit, OnDestroy {
 
   musicas: any[];
   isUsuarioMaster: boolean;
+  filaSub: Subscription;
 
   constructor(
     private af: AngularFire,
@@ -26,7 +28,7 @@ export class FilaComponent implements OnInit {
     this.gerenciadorFila.obterFila()
       .subscribe(ms => this.musicas = ms);
 
-    this.af.auth
+    this.filaSub = this.af.auth
       .switchMap(authState => {
         if (!!authState && !!authState.auth) {
           return this.us.verificarSeUsuarioMaster(authState.auth)
@@ -38,6 +40,12 @@ export class FilaComponent implements OnInit {
         return Observable.of(false);
       })
       .subscribe(isUsuarioMaster => this.isUsuarioMaster = isUsuarioMaster);
+  }
+
+  ngOnDestroy() {
+    if (!!this.filaSub) {
+      this.filaSub.unsubscribe();
+    }
   }
 
   darPrioridade(musica) {
@@ -55,5 +63,4 @@ export class FilaComponent implements OnInit {
   definirMusicaComoTocada(musica) {
     this.db.definirMusicaComoTocada(musica);
   }
-
 }

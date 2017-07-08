@@ -1,4 +1,5 @@
 import { FBItem } from './fb-item';
+import { User } from './user';
 
 export interface Musica extends FBItem {
 	added: boolean;
@@ -54,33 +55,3 @@ export interface Snippet {
 	thumbnails: Thumbnail;
 	title: string;
 }
-
-export interface ProviderData {
-	displayName: string;
-	email: string;
-	photoURL: string;
-	providerId: string;
-	uid: string;
-}
-
-export interface StsTokenManager {
-	accessToken: string;
-	apiKey: string;
-	expirationTime: number;
-	refreshToken: string;
-}
-
-export interface User {
-	apiKey: string;
-	appName: string;
-	authDomain: string;
-	displayName: string;
-	email: string;
-	emailVerified: boolean;
-	isAnonymous: boolean;
-	photoURL: string;
-	providerData: ProviderData[];
-	stsTokenManager: StsTokenManager;
-	uid: string;
-}
-

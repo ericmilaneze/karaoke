@@ -1,5 +1,5 @@
 import { Observable, Subscriber } from 'rxjs/Rx';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from "rxjs/Subscription";
 
 import { MusicasDBService } from '../_services/musicas-d-b.service';
@@ -10,13 +10,14 @@ import { GerenciadorFilaService } from '../_services/gerenciador-fila.service';
   templateUrl: './cantar.component.html',
   styleUrls: ['./cantar.component.scss']
 })
-export class CantarComponent implements OnInit {
+export class CantarComponent implements OnInit, OnDestroy {
 
   @ViewChild('divContainer')
   divContainer: ElementRef;
 
   private defaults = {
     tempoInicial: 10,
+    tempoParaDecidirErro: 5,
     ratioLargura: 16,
     ratioAltura: 9,
     alturaMenuMargin: 75,
@@ -34,6 +35,8 @@ export class CantarComponent implements OnInit {
   larguraVideo: number;
   alturaVideo: number;
   itvSub: Subscription;
+  filaSub: Subscription;
+  erroItvSub: Subscription;
 
   constructor(
     private musicasDB: MusicasDBService,
@@ -42,7 +45,7 @@ export class CantarComponent implements OnInit {
   ngOnInit() {
     this.resize();
 
-    this.gerenciadorFila.obterProxima()
+    this.filaSub = this.gerenciadorFila.obterProxima()
       .subscribe(ms => {
         if (!this.musica || (!!this.musica && !!ms && this.musica.$key !== ms.$key)) {
           if (!!this.itvSub) {
@@ -79,6 +82,20 @@ export class CantarComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    if (!!this.filaSub) {
+      this.filaSub.unsubscribe();
+    }
+
+    if (!!this.itvSub) {
+      this.itvSub.unsubscribe();
+    }
+
+    if (!!this.erroItvSub) {
+      this.erroItvSub.unsubscribe();
+    }
+  }
+
   onStateChange(event) {
     this.state = event.data;
 
@@ -86,19 +103,32 @@ export class CantarComponent implements OnInit {
       this.tocandoMusica = false;
       this.musicasDB.definirMusicaComoTocada(this.musica);
     } else if (this.state === -1) { // música com erro
-      this.mostrandoErro = true;
-      this.tocandoMusica = false;
-      this.tempo = this.defaults.tempoInicial;
+      this.tempo = this.defaults.tempoParaDecidirErro;
 
-      this.itvSub = Observable.interval(1000)
+      this.erroItvSub = Observable.interval(1000)
         .subscribe(t => {
           if (this.tempo > 0) {
             this.tempo--;
           } else {
-            this.mostrandoErro = false;
-            this.musicasDB.definirMusicaComErro(this.musica);
+            if (this.state === -1) { // erro persiste
+              this.mostrandoErro = true;
+              this.tocandoMusica = false;
+              this.tempo = this.defaults.tempoInicial;
 
-            this.itvSub.unsubscribe();
+              this.itvSub = Observable.interval(1000)
+                .subscribe(t => {
+                  if (this.tempo > 0) {
+                    this.tempo--;
+                  } else {
+                    this.mostrandoErro = false;
+                    this.musicasDB.definirMusicaComErro(this.musica);
+
+                    this.itvSub.unsubscribe();
+                  }
+                });
+            }
+
+            this.erroItvSub.unsubscribe();
           }
         });
     }
