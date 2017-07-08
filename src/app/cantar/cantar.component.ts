@@ -98,7 +98,7 @@ export class CantarComponent implements OnInit, OnDestroy {
 
   onStateChange(event) {
     this.state = event.data;
-
+    console.log('state', this.state);
     if (this.state === 0) { // música terminada
       this.tocandoMusica = false;
       this.musicasDB.definirMusicaComoTocada(this.musica);

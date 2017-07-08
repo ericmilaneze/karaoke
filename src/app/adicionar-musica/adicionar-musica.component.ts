@@ -116,7 +116,11 @@ export class AdicionarMusicaComponent implements OnInit {
   }
 
   adicionarMusica(musica) {
-    this.testando[musica.id.videoId] = true;
+    if (this.isMobile()) { // celular ou tablet
+      this.musicasDB.adicionarMusica(musica, this.user);
+    } else { // computador
+      this.testando[musica.id.videoId] = true;
+    }
   }
 
   filtrarTemKaraokeNoTitulo(titulo: string) {
@@ -133,34 +137,16 @@ export class AdicionarMusicaComponent implements OnInit {
   }
 
   onStateChange(event, musica) {
-    if (this.isMobile()) { // celular ou tablet
-      if (event.data === -1) {
-        setTimeout(() => {
-          if (event.data === -1 && this.testando[musica.id.videoId]) {
-            this.testando[musica.id.videoId] = false;
-            musica.erro = true;
-          }
-        }, this.defaults.tempoParaDecidirErroMobile);
-      } else { // música pode ter funcionado
-        setTimeout(() => { // esperar um tempo para ver se funcionou mesmo
-          if (this.testando[musica.id.videoId]) {
-            this.testando[musica.id.videoId] = false;
-            this.musicasDB.adicionarMusica(musica, this.user);
-          }
-        }, this.defaults.tempoEsperaMobile);
-      }
-    } else { // computador
-      if (event.data !== 3 && event.data !== -1) { // teste funcionou
-        this.testando[musica.id.videoId] = false;
-        this.musicasDB.adicionarMusica(musica, this.user);
-      } else if (event.data === -1) { // erro na música
-        setTimeout(() => {
-          if (event.data === -1 && this.testando[musica.id.videoId]) { // ainda com erro
-            this.testando[musica.id.videoId] = false;
-            musica.erro = true;
-          }
-        }, this.defaults.tempoParaDecidirErro);
-      }
+    if (event.data !== 3 && event.data !== -1) { // teste funcionou
+      this.testando[musica.id.videoId] = false;
+      this.musicasDB.adicionarMusica(musica, this.user);
+    } else if (event.data === -1) { // erro na música
+      setTimeout(() => {
+        if (event.data === -1 && this.testando[musica.id.videoId]) { // ainda com erro
+          this.testando[musica.id.videoId] = false;
+          musica.erro = true;
+        }
+      }, this.defaults.tempoParaDecidirErro);
     }
   }
 }
