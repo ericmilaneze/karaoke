@@ -52,27 +52,35 @@ export class CantarComponent implements OnInit, OnDestroy {
             this.itvSub.unsubscribe();
           }
 
+          if (!!this.erroItvSub) {
+            this.erroItvSub.unsubscribe();
+          }
+
           this.musica = ms;
 
-          this.musicasDB.definirMusicaAtual(this.musica.$key);
+          if (!!this.musica) {
+            this.musicasDB.definirMusicaAtual(this.musica.$key);
 
-          this.tempo = this.defaults.tempoInicial;
-          this.carregandoMusica = true;
-          this.videoId = this.musica.id.videoId;
+            this.tempo = this.defaults.tempoInicial;
+            this.carregandoMusica = true;
+            this.videoId = this.musica.id.videoId;
 
-          this.tocandoMusica = false;
+            this.tocandoMusica = false;
 
-          this.itvSub = Observable.interval(1000)
-            .subscribe(t => {
-              if (this.tempo > 0) {
-                this.tempo--;
-              } else {
-                this.tocandoMusica = true;
-                this.carregandoMusica = false;
+            this.itvSub = Observable.interval(1000)
+              .subscribe(t => {
+                if (this.tempo > 0) {
+                  this.tempo--;
+                } else {
+                  this.tocandoMusica = true;
+                  this.carregandoMusica = false;
 
-                this.itvSub.unsubscribe();
-              }
-            });
+                  if (!!this.itvSub) {
+                    this.itvSub.unsubscribe();
+                  }
+                }
+              });
+          }
         } else if (!ms) {
           this.musica = null;
           this.tocandoMusica = false;
@@ -98,11 +106,19 @@ export class CantarComponent implements OnInit, OnDestroy {
 
   onStateChange(event) {
     this.state = event.data;
-    console.log('state', this.state);
+
     if (this.state === 0) { // música terminada
       this.tocandoMusica = false;
       this.musicasDB.definirMusicaComoTocada(this.musica);
     } else if (this.state === -1) { // música com erro
+      if (!!this.itvSub) {
+        this.itvSub.unsubscribe();
+      }
+
+      if (!!this.erroItvSub) {
+        this.erroItvSub.unsubscribe();
+      }
+
       this.tempo = this.defaults.tempoParaDecidirErro;
 
       this.erroItvSub = Observable.interval(1000)
@@ -123,12 +139,16 @@ export class CantarComponent implements OnInit, OnDestroy {
                     this.mostrandoErro = false;
                     this.musicasDB.definirMusicaComErro(this.musica);
 
-                    this.itvSub.unsubscribe();
+                    if (!!this.itvSub) {
+                      this.itvSub.unsubscribe();
+                    }
                   }
                 });
             }
 
-            this.erroItvSub.unsubscribe();
+            if (!!this.erroItvSub) {
+              this.erroItvSub.unsubscribe();
+            }
           }
         });
     }
